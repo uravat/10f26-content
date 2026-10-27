@@ -1,0 +1,208 @@
+---
+title: "Your Turn : Named Discrete distributions"
+author: "Dr. Uma Ravat"
+date: "`r Sys.Date()`"
+tutorial:
+  id: "Lecture09_Named distributions"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+description: "Named distributions"
+runtime: shiny_prerendered
+---
+
+
+```{r setup, include = FALSE}
+library(learnr)
+library(tutorial.helpers)
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE)
+options(tutorial.exercise.timelimit = 60, 
+        tutorial.storage = "local") 
+```
+
+```{r, echo = F}
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{\\textbf{%s}}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+
+```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
+```
+
+```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
+```
+
+##  Binomial Distributions
+
+### Probability calculation 1. 
+
+Let X ∼ Binom(10, 1/4). Determine the probability of getting 4 successes, i.e P(X = 4).
+
+*Hint*: What parameters are we working with? What is our sample size? What is our probability of success? 
+
+```{r bin1, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin1-solution}
+# n <- 10
+# p <- 1/4
+# k <- 4
+dbinom(4, size = 10, prob = 1/4)
+```
+
+### Plotting the pmf
+
+The plot of the pmf of X is
+
+```{r bin2, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin2-solution}
+plot(0:10, dbinom(0:10, 10, 1/4), 
+     xlab="Number of successes", ylab="Probability", type="h")
+```
+
+### Probability calculation 2
+
+What’s the probability of at most 4 successes, i.e P(X ≤ 4) =?
+
+```{r bin3, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin3-solution}
+# method 1
+sum(dbinom(0:4, size = 10, prob = 1/4))
+
+# method 2
+pbinom(4, size = 10, prob = 1/4)
+```
+
+### Plotting the cdf
+
+The plot of the cdf of X is
+
+```{r bin4, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin4-solution}
+plot(0:10, pbinom(0:10, 10, 1/4), 
+     xlab="Number of successes", ylab="Probability", type="s", lwd=4)
+abline(0.53, 0, lty = 2, col = "red")
+abline(0.78, 0, lty = 2, col = "red")
+```
+
+### Probability calculaton 3
+
+Let X ∼ Binom(10, 1/4). What’s the probability of getting between 4 and 8 successes, i.e P(4 ≤ X ≤ 8) = ?
+
+```{r bin5, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin5-solution}
+# method 1
+pbinom(8, 10, 1/4) - pbinom(3, 10 , 1/4)
+
+# method 2
+sum(dbinom(4:8, 10,1/4))
+```
+
+### Probability calculation 4
+
+What’s the probability of getting more than 4 successes, i.e P(X > 4) = ?
+
+```{r bin6, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin6-solution}
+1 - pbinom(4, 10, 1/4)
+```
+
+## Generating a sample of binomial observations
+
+If X ∼ Binom(10, 0.8) then X is total number of successes in 10 trials of a binomial experiment with p = 0.8
+
+We can model this using `sum(sample(0:1, 10, replace = T, prob = c(0.2, 0.8)))` = `r sum(sample(0:1, 10, replace = T, prob = c(0.2, 0.8)))`
+
+However, we can also use R's built in binomial generator:
+
+```{r binE1, echo = T, exercise = FALSE}
+rbinom(1, size = 10, prob = 0.8)
+```
+
+### Generate a sample of size 5 from the binomial distribution
+
+X ∼ Binom(10, 0.8)
+
+```{r bin7, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin7-solution}
+rbinom(5, size = 10, prob = 0.8)
+```
+
+## Looking at the family of all binomial distributions
+
+Binomial distributions for n = 10 and different p
+
+```{r binE2, echo = T, exercise = FALSE}
+par(mfrow = c(2,2))
+plot(0:10,dbinom(0:10, 10, 0.1),
+type="h", xlab = "x", ylab = "P(X=x)",
+main = "p = 0.1")
+plot(0:10,dbinom(0:10, 10, 0.3),
+type="h", xlab = "x", ylab = "P(X=x)",
+main = "p = 0.3")
+plot(0:10,dbinom(0:10, 10, 0.7),
+type="h",xlab = "x", ylab = "P(X=x)",
+main = "p = 0.7")
+plot(0:10,dbinom(0:10, 10, 0.9),
+type="h", xlab = "x", ylab = "P(X=x)" ,
+main = "p = 0.9")
+```
+
+### Generate binomial distributions for different values of n and same/different values of p 
+
+
+```{r bin8, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+```{r bin8-solution}
+par(mfrow = c(2,2))
+plot(0:10,dbinom(0:10, 10, 0.7),
+type="h", xlab = "x", ylab = "P(X=x)",
+main = "n = 10")
+plot(0:100,dbinom(0:100, 50, 0.7),
+type="h", xlab = "x", ylab = "P(X=x)",
+main = "n = 100")
+plot(0:1000,dbinom(0:1000, 100, 0.7),
+type="h",xlab = "x", ylab = "P(X=x)",
+main = "n = 1000")
+```
+What can you conclude from the two above exercises? This is what a data scientist sort of does - looks at data and draws some conclusions. 
+
+### Try something else if you feel like
+
+```{r try, exercise=TRUE, exercise.eval=FALSE}
+your_code_here
+```
+
+
+
+```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
+```
+
