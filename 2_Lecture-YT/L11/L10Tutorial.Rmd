@@ -1,0 +1,300 @@
+---
+title: "Your Turn : Named continuous distributions"
+author: "Dr. Uma Ravat"
+date: "`r Sys.Date()`"
+tutorial:
+  id: "Lecture09_Named distributions"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+description: "Named distributions"
+runtime: shiny_prerendered
+---
+
+
+```{r setup, include = FALSE}
+library(learnr)
+library(tutorial.helpers)
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE)
+options(tutorial.exercise.timelimit = 60, 
+        tutorial.storage = "local") 
+```
+
+```{r, echo = F}
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{\\textbf{%s}}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+```{r copy-code-chunk, child = system.file("child_documents/copy_button.Rmd", package = "tutorial.helpers")}
+```
+
+```{r info-section, child = system.file("child_documents/info_section.Rmd", package = "tutorial.helpers")}
+```
+
+## Named Continuous Distributions
+
+In this tutorial, you will work with:
+
+-   Continuous Uniform distribution
+-   Normal distribution
+
+You should be able to:
+
+-   Identify the distribution\
+-   Compute probabilities using R\
+-   Use density, cumulative distribution, quantile, and simulation functions\
+-   Interpret results correctly
+
+------------------------------------------------------------------------
+
+## Part 1: Continuous Uniform Distribution
+
+### Bus Waiting Time Example
+
+A bus arrives every 10 minutes. A student arrives at a random time.
+
+Let:
+
+X \~ Unif(0,10)
+
+-   pdf: f(x) = 1/10 for 0 ≤ x ≤ 10\
+-   All waiting times between 0 and 10 are equally likely.
+
+------------------------------------------------------------------------
+
+### Probability 1: Waiting time 5 minutes or less
+
+Compute: $P(X \leq 5)$
+
+```{r unif1, exercise=TRUE,  exercise.eval=FALSE} 
+# Use punif()
+```
+
+```{r unif1-solution} 
+punif(5, min = 0, max = 10)
+```
+
+------------------------------------------------------------------------
+
+### Probability 2: Waiting time between 5 and 7 minutes
+
+Compute: $P(5 \leq X \leq 7)$
+
+```{r unif2, exercise=TRUE,  exercise.eval=FALSE}
+# Use difference of two CDF values
+```
+
+```{r unif2-solution} 
+punif(7, min = 0, max = 10) -    punif(5, min = 0, max = 10)
+```
+
+------------------------------------------------------------------------
+
+### Probability 3: Waiting time more than 6 minutes
+
+Compute: $P(X \geq 6)$
+
+```{r unif3, exercise=TRUE, exercise.eval=FALSE} 
+# Use lower.tail = FALSE
+```
+
+```{r unif3-solution} 
+punif(6, min = 0, max = 10, lower.tail = FALSE)
+```
+
+------------------------------------------------------------------------
+
+### Uniform Distribution Functions in R
+
+For X \~ Unif(a,b):
+
+-   dunif(x, min, max) → density\
+-   punif(q, min, max) → cumulative probability\
+-   qunif(p, min, max) → quantile\
+-   runif(n, min, max) → random sample
+
+------------------------------------------------------------------------
+
+### Generate 5 observations from Unif(0,10)
+
+```{r unif4, exercise=TRUE, exercise.eval=FALSE} 
+# Generate 5 values
+```
+
+```{r unif4-solution} 
+runif(5, min = 0, max = 10)
+```
+
+------------------------------------------------------------------------
+
+### Generate 1000 observations and visualize
+
+```{r unif5, exercise=TRUE, exercise.eval=FALSE} 
+# Generate and plot
+```
+
+```{r unif5-solution} 
+x <- runif(1000, min = 0, max = 10) 
+hist(x, breaks = 20, probability = TRUE) 
+abline(h = 1/10, lwd = 2)
+```
+
+Notice the approximately flat shape --- all values are equally likely.
+
+------------------------------------------------------------------------
+
+## Part 2: Normal Distribution
+
+### Key Properties
+
+If:
+
+$X \sim N(\mu,\sigma)$
+
+-   Bell-shaped\
+-   Symmetric about μ\
+-   Mean = Median = Mode\
+-   Total area under curve = 1\
+-   Determined by mean ($\mu$) and standard deviation ($\sigma$)
+
+Standard normal: $Z \sim N(0,1)$
+
+------------------------------------------------------------------------
+
+### Normal Distribution Functions in R
+
+For $X \sim N(\mu,\sigma)$:
+
+-   dnorm(x, mean, sd) → density\
+-   pnorm(q, mean, sd) → cumulative probability\
+-   qnorm(p, mean, sd) → quantile\
+-   rnorm(n, mean, sd) → random sample
+
+------------------------------------------------------------------------
+
+### Plot the Standard Normal Density
+
+```{r normal1, exercise=TRUE, exercise.eval=FALSE} 
+# Plot N(0,1)
+```
+
+```{r normal1-solution} 
+x <- seq(-3, 3, by = 0.01) 
+y <- dnorm(x) 
+plot(x, y, type = "l", lwd = 2,      
+     main = "Standard Normal Density",      
+     xlab = "x", ylab = "Density")
+```
+
+------------------------------------------------------------------------
+
+### Probability: P(X ≤ 2) where X \~ N(1,1.5)
+
+```{r normal2, exercise=TRUE, exercise.eval=FALSE} 
+# Use pnorm()
+```
+
+```{r normal2-solution, exercise.eval=FALSE} 
+pnorm(2, mean = 1, sd = 1.5)
+```
+
+------------------------------------------------------------------------
+
+### Probability: P(X \> 2)
+
+```{r normal3, exercise=TRUE, exercise.eval=FALSE} 
+# Use lower.tail = FALSE
+```
+
+```{r normal3-solution} 
+pnorm(2, mean = 1, sd = 1.5, lower.tail = FALSE)
+```
+
+------------------------------------------------------------------------
+
+### Probability: P(0 ≤ X ≤ 2)
+
+```{r normal4, exercise=TRUE, exercise.eval=FALSE} 
+# Difference of two CDFs
+```
+
+```{r normal4-solution} 
+pnorm(2, mean = 1, sd = 1.5) -   pnorm(0, mean = 1, sd = 1.5)
+```
+
+------------------------------------------------------------------------
+
+### Find the 90th percentile of N(1,1.5)
+
+```{r normal5, exercise=TRUE, exercise.eval=FALSE} 
+# Use qnorm()
+```
+
+```{r normal5-solution} 
+qnorm(0.90, mean = 1, sd = 1.5)
+```
+
+Interpretation: 90% of observations fall below this value.
+
+------------------------------------------------------------------------
+
+### Simulate 1000 observations and visualize
+
+```{r normal6, exercise=TRUE, exercise.eval=FALSE} 
+# Simulate and plot
+```
+
+```{r normal6-solution} 
+set.seed(123) 
+x <- rnorm(1000, mean = 1, sd = 1.5) 
+hist(x, breaks = 30, probability = TRUE) 
+curve(dnorm(x, mean = 1, sd = 1.5), add = TRUE, lwd = 2)
+```
+
+------------------------------------------------------------------------
+
+### Check the 68% Rule for Standard Normal
+
+Compute:
+
+P(-1 ≤ Z ≤ 1)
+
+```{r normal7, exercise=TRUE, exercise.eval=FALSE} 
+# Your code here
+```
+
+```{r normal7-solution} 
+pnorm(1) - pnorm(-1)
+```
+
+You should obtain approximately 0.68.
+
+------------------------------------------------------------------------
+
+## Summary
+
+For continuous distributions:
+
+-   Probability = Area under the curve\
+-   d → density\
+-   p → cumulative probability\
+-   q → quantile\
+-   r → simulation
+
+You should now be able to:
+
+-   Identify Uniform vs Normal\
+-   Compute probabilities correctly\
+-   Find percentiles\
+-   Simulate observations\
+-   Interpret results in context
+
+```{r download-answers, child = system.file("child_documents/download_answers.Rmd", package = "tutorial.helpers")}
+```
