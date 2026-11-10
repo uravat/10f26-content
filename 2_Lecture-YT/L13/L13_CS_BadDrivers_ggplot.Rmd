@@ -1,0 +1,531 @@
+---
+title: "Case Study: Analyzing Bad Drivers Data"
+author: " Data Science Workflow, Data Transformation  and ggplot "
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    theme: readable
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 8, fig.height = 6)
+ft_colors <- c("#FF2700", "#008FD5", "#77787B", "#2FC1D3", "#76B4BD", 
+               "#BABABA", "#FFB81C", "#E03A3E")
+```
+
+# Welcome to Data Wrangling! 🚗📊
+
+We will learn about Data Wrangling and tidyverse's data science ecosystem through a real-world dataset about driving safety across US states from ["Dear Mona, Which State Has The Worst Drivers?"](https://web.archive.org/web/20260301023213/https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/) 
+
+## Learning Objectives for today
+
+
+- Load and explore data using tidyverse
+- Practice some wrangling with tidyverse functions
+- Understand the data science workflow: Import → Tidy → Transform → Visualize → Model → Communicate
+- Visualize data with ggplot2
+
+---
+
+# Part 1: Setting Up Your R Environment 
+
+## Loading Required Packages
+
+
+```{r load-packages, }
+# Install packages if needed (run once)
+# install.packages(c("tidyverse", "kableExtra"))
+
+# Load packages 
+library(tidyverse)  # Data science toolkit (includes ggplot2, dplyr, readr, etc.)
+library(kableExtra) # Pretty tables
+```
+
+**R and Tidyverse**
+
+- `library(tidyverse)`
+- `head(df)` or using a pipe `|>` or `%>%`: df |> head()` read as 'and then'
+- `dim(df)`, `glimpse`, `str` etc
+
+---
+
+# Part 2: Data Import and First Look 
+
+```{r import-data}
+# Import data directly from FiveThirtyEight's GitHub
+#drivers <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/bad-drivers/bad-drivers.csv")
+
+drivers <- read_csv("./data/bad-drivers.csv")
+# First look at the data
+head(drivers)
+str(drivers)
+```
+
+## Data Exploration
+
+```{r explore-data}
+# Dimensions 
+dim(drivers)
+
+# Column names and types
+glimpse(drivers)
+
+# Summary statistics
+summary(drivers)
+```
+
+## Data Wrangling to Clean Up Column Names
+
+```{r clean-names}
+# Rename columns for easier analysis
+##
+# Some data wrangling : 
+## WRANGLE : rename
+#
+# objects and object assignment
+# <- object assignmnet
+# pipe:  |> or %>%
+
+drivers_clean <- drivers |>
+  rename(
+    state = State,
+    fatal_rate = `Number of drivers involved in fatal collisions per billion miles`,
+    pct_speeding = `Percentage Of Drivers Involved In Fatal Collisions Who Were Speeding`,
+    pct_alcohol = `Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired`,
+    pct_not_distracted = `Percentage Of Drivers Involved In Fatal Collisions Who Were Not Distracted`,
+    pct_no_previous = `Percentage Of Drivers Involved In Fatal Collisions Who Had Not Been Involved In Any Previous Accidents`,
+    insurance_premium = `Car Insurance Premiums ($)`,
+    losses = `Losses incurred by insurance companies for collisions per insured driver ($)`
+  )
+
+
+# Check 
+names(drivers_clean)
+head(drivers_clean, 3)
+```
+
+```{r}
+## Look at Most dangerous states (by fatal collision rate): What do you find? 
+
+## Some more data wrangling 
+## WRANGLE : select, arrange
+## 
+
+drivers_clean %>%
+  select(state,  fatal_rate) #  %>%
+#  arrange(desc(fatal_rate))  %>%
+#  head(5) %>%
+#  knitr::kable()
+```
+
+
+---
+
+# Part 3: Data Visualization with ggplot2 
+
+ggplot2 uses a "grammar of graphics" - you build plots layer by layer.
+
+**Basic ggplot2 syntax:**
+```r
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+The `<GEOM_FUNCTION>` part tells R what kind of plot you want to make. Some of the most common geoms:
+
+- geom_point() → scatterplots
+- geom_bar() → bar plots (counts of categories)
+- geom_col() → bar plots when you already have values to plot (not counts)
+- geom_line() → line plots
+- geom_histogram() → histograms
+- geom_boxplot() → boxplots
+- geom_density() → smoothed density curves
+
+## Visualization 1: Fatal Collision Rates by State
+
+```{r}
+# basic plot
+ggplot(data = drivers_clean)
+```
+
+
+```{r plot1-fatal-rates0}
+# Basic bar chart
+ggplot(data = drivers_clean) +
+  geom_col(mapping = aes(x = state, y = fatal_rate))
+```
+
+
+
+### Improve the plot 
+
+
+## TO DO LATER: HW 08 Plot 1: 
+
+Come up with a neat visualization that shows something interesting about insurance premiums
+
+```{r}
+## Add your code here
+```
+
+## Your Turn(YT) Distribution of a variable/column (random variable)
+
+```{r your-turn-1, eval=FALSE}
+# Create a histogram showing the distribution of insurance premiums
+# Fill in the blanks and remove eval=FALSE while knitting
+
+drivers_clean %>%
+  ggplot(aes(x = _______)) +
+  geom_______(_____) +
+  labs(
+    title = "Distribution of average annual car insurance Premiums",
+    subtitle = "______",
+    x = "_______",
+    y = "_______"
+  ) +
+  theme_minimal()
+```
+
+## Visualization 2: Explore relationships amongst variables:
+
+- lm : linear model (modeling a straight line through the data(sample))
+- se : standard error (spread of data around the straight line (captures variability of data around the linear model)
+
+
+```{r reln-alcohol-fatalities1}
+ggplot(drivers_clean, aes(x = pct_alcohol, y = fatal_rate)) +
+  geom_point()  +
+  # geom_smooth(method = "lm", se = TRUE, color = "red") +
+  labs(
+    title = "Alcohol-Impaired Driving vs Fatal Collisions",
+    x = "% of Drivers Alcohol-Impaired in Fatal Collisions",
+    y = "Fatal Collisions per Billion Miles"
+  ) +
+  theme_minimal()
+```
+
+```{r reln-alcohol-fatalities2}
+ggplot(drivers_clean, aes(x = pct_alcohol, y = fatal_rate)) +
+  geom_point(color = "firebrick", size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  labs(
+    title = "Relationship between Fatal Collisions and  Alcohol-Impaired Driving",
+    subtitle = "",
+    x = "% of Drivers Alcohol-Impaired in Fatal Collisions",
+    y = "Fatal Collisions per Billion Miles"
+  ) +
+  theme_minimal()
+```
+
+**Interpretation: ** Always interpret your visualizations. 
+
+## Visualization 3: Comparing Causes: Alcohol, Speeding, and Distraction
+
+
+```{r understanding_pivot_longer}
+## Comparing various causes : Speeding, Alcohol and Distraction. 
+
+
+head(drivers_clean, 3)
+
+# PREPARE THE DATA 
+## Some more data wrangling
+## WRANGLE : select, mutate, 
+## TRANSFORM: pivot_longer
+
+drivers_long <- drivers_clean |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, pct_not_distracted) |>
+  mutate(
+    pct_distracted = 100 - pct_not_distracted
+  ) |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, pct_distracted) # |>
+# Gives one line per state: state	fatal_rate	pct_speeding	pct_alcohol	pct_distracted
+# pivot_longer(cols = starts_with("pct"),
+#            names_to = "cause",
+#            values_to = "percent")
+ # Makes it longer: 3 lines per state: 1 for each cause( speeding, alcohol, distracted driving and only 3 columns state	fatal_rate	cause	percent
+# Now can eaisly plot this data. 
+
+## intermediate checks 
+drivers_long |> head() |> knitr::kable()
+
+# Want plot of fatality rate(numeric) vs proportion/percent(numeric) of drivers by the three causes 
+
+```
+
+**Check out the help files for `mutate` and `pivot_longer` and `pivot_wider`**
+
+```{r compare-alchol-speeding-distraction}
+## Multiple scatter plots  
+
+# PREPARE THE DATA 
+## Some more data wrangling
+## WRANGLE : select, mutate, 
+## TRANSFORM: pivot_longer
+drivers_long <- drivers_clean |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, pct_not_distracted) |>
+  mutate(
+    pct_distracted = 100 - pct_not_distracted
+  ) |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, pct_distracted) |>
+  pivot_longer(cols = starts_with("pct"),
+              names_to = "cause",
+               values_to = "percent")
+
+##peek at data 
+drivers_long |> head() |> knitr::kable()
+
+
+## Want plot of fatality rate(numeric) vs proportion/percent(numeric) of drivers by the three causes 
+
+
+
+
+
+
+
+
+
+## Visulaize
+
+ggplot(drivers_long, aes(x = percent, y = fatal_rate, color = cause)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = c(
+    pct_speeding = "steelblue",
+    pct_alcohol = "firebrick",
+    pct_distracted = "darkgreen"
+  ),
+  labels = c(
+    pct_speeding = "Speeding",
+    pct_alcohol = "Alcohol",
+    pct_distracted = "Distracted")
+  ) +
+  labs(
+    title = "Comparing Causes of Fatal Collisions",
+    subtitle = "As alcohol involvement rises, fatal collisions increase noticeably",
+    x = "% of Drivers Involved in Fatal Collisions",
+    y = "Fatal Collisions per Billion Miles",
+    color = "Cause"
+  ) +
+  theme_minimal()
+```
+
+**Interpretation: **
+
+
+## Visualization 4: Regional Analysis
+
+**Check out the help files for `case_when`**
+
+```{r plot4-regions}
+
+# Add regions (you could also join with a separate dataset)
+
+# PREPARE THE DATA 
+## WRANGLE: mutate, case_when
+
+drivers_regions <- drivers_clean |>
+  mutate(
+    region = case_when(
+      state %in% c("Maine", "New Hampshire", "Vermont", "Massachusetts", 
+                   "Rhode Island", "Connecticut", "New York", "New Jersey", "Pennsylvania") ~ "Northeast",
+      state %in% c("Ohio", "Michigan", "Indiana", "Illinois", "Wisconsin", 
+                   "Minnesota", "Iowa", "Missouri", "North Dakota", "South Dakota", 
+                   "Nebraska", "Kansas") ~ "Midwest",
+      state %in% c("Delaware", "Maryland", "District of Columbia", "Virginia", 
+                   "West Virginia", "Kentucky", "Tennessee", "North Carolina", 
+                   "South Carolina", "Georgia", "Florida", "Alabama", "Mississippi", 
+                   "Arkansas", "Louisiana", "Texas", "Oklahoma") ~ "South",
+      state %in% c("Montana", "Wyoming", "Colorado", "New Mexico", "Idaho", 
+                   "Utah", "Nevada", "Arizona", "Washington", "Oregon", 
+                   "California", "Alaska", "Hawaii") ~ "West"
+    )
+  )
+
+##peek at data 
+drivers_regions |> head() |> knitr::kable()
+
+
+
+# Want a plot of fatality rate(numeric) by region(categorical) 
+
+
+
+
+
+
+
+
+
+
+
+# Box plot  of fatal collisiion rate by region
+
+## GEOM: geom_jitter
+ggplot(drivers_regions, aes(x = region, y = fatal_rate, fill = region)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.2, alpha = 0.5) + ## check
+  labs(
+    title = "Distribution of Fatal Collision Rates by US Region",
+    subtitle = "",
+    x = "Region",
+    y = "Fatal Collision Rate (per billion miles)",
+    caption = "Data: FiveThirtyEight"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")  # Remove legend since x-axis shows regions
+```
+
+## TO DO LATER: HW 08 Plot 2: 
+
+How do insurance premiums ary across regions? Show an interesting plot and don't forget to conclude with your written brief take-away. 
+
+```{r}
+## Add your code here
+```
+
+
+# Part 4: Data Transformation and Summary Statistics
+
+## Creating Summary Statistics
+
+
+```{r}
+# Summary by region
+
+# DATA PREPARATION
+## WRANGLE: group_by, summarize, n(), arrange
+
+drivers_regions |> head() |> knitr::kable()
+
+regional_summary <- drivers_regions |>
+  group_by(region)  |>
+  summarise(
+    n_states = n(),
+    avg_fatal_rate = mean(fatal_rate, na.rm = TRUE),
+    median_fatal_rate = median(fatal_rate, na.rm = TRUE),
+    avg_insurance = mean(insurance_premium, na.rm = TRUE),
+    avg_speeding = mean(pct_speeding, na.rm = TRUE),
+    .groups = "drop"
+   ) #|>
+  # arrange(desc(avg_fatal_rate))
+
+
+##peek at data 
+regional_summary |> head() |> knitr::kable()
+```
+
+
+```{r summary-stats}
+# Summary by region
+
+# DATA PREPARATION
+## WRANGLE: group_by, summarize, n(), arrange
+regional_summary <- drivers_regions |>
+  group_by(region) |>
+  summarise(
+    n_states = n(),
+    avg_fatal_rate = mean(fatal_rate, na.rm = TRUE),
+    median_fatal_rate = median(fatal_rate, na.rm = TRUE),
+    avg_insurance = mean(insurance_premium, na.rm = TRUE),
+    avg_speeding = mean(pct_speeding, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  arrange(desc(avg_fatal_rate))
+
+# Display as a nice table
+regional_summary |>
+  kable(
+    caption = "Regional Summary of Driving Safety Metrics",
+    digits = 2,
+    col.names = c("Region", "# States", "Avg Fatal Rate", "Median Fatal Rate", 
+                  "Avg Insurance Premium", "Avg % Speeding")
+  ) |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+## Find the "Worst" and "Best" Drivers
+
+```{r extreme-states}
+# States with highest fatal rates
+
+# WRANGLE: slice, select
+
+worst_drivers <- drivers_clean |>
+  slice_max(fatal_rate, n = 5) |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, insurance_premium)
+
+#dim(worst_drivers) # why 6? 
+
+# States with lowest fatal rates
+best_drivers <- drivers_clean |>
+  slice_min(fatal_rate, n = 5) |>
+  select(state, fatal_rate, pct_speeding, pct_alcohol, insurance_premium)
+
+print("States with Highest Fatal Collision Rates:")
+worst_drivers |>
+  kable(digits = 2) |>
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+print("States with Lowest Fatal Collision Rates:")
+best_drivers |>
+  kable(digits = 2) |>
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+---
+
+## Part 5: Advanced plotting
+
+### Choropleth Map of Fatal Collision Rates
+
+
+
+### Interactive Map with Leaflet
+
+
+---
+
+# Part 6: Putting It All Together 
+
+## Key Findings
+
+Based on our analysis:
+
+1. **Fatal collision rates vary significantly** across states, from `r round(min(drivers_clean$fatal_rate), 1)` to `r round(max(drivers_clean$fatal_rate), 1)` per billion miles.
+
+2. **Regional patterns exist**: Some regions show consistently higher or lower rates.
+
+3. **Multiple factors contribute**: Speeding, alcohol use, and distraction all play roles, but their relationships with fatal rates are complex.
+
+4. **Insurance costs reflect risk**: States with higher fatal rates tend to have higher insurance premiums.
+
+## The Data Science Workflow in Action
+
+We've completed a full cycle:
+
+1. **Import**: Loaded data from FiveThirtyEight
+2. **Tidy**: Cleaned column names, reshaped data for analysis  
+3. **Transform**: Created regional groupings, calculated summaries
+4. **Visualize**: Created multiple plot types to explore patterns
+5. **Model**: Used trend lines to explore relationships
+6. **Communicate**: Organized findings in a clear report
+
+---
+
+# Getting Help
+
+- **AI**
+- **R Documentation**: Use `?function_name` (e.g., `?ggplot`)
+- **Tidyverse Website**: https://www.tidyverse.org/
+- **R for Data Science Book**: https://r4ds.had.co.nz/ Chapter **1,3**,5,19 and exercises
+- **Stack Overflow**: Tag your questions with [r] and [ggplot2]
+
+**Remember**: R has a great community. When you get stuck, someone has probably asked the same question before!
+
+---

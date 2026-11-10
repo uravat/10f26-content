@@ -1,0 +1,204 @@
+---
+title: "Homework 8: Continuing Case Study: Analyzing Bad Drivers Data"
+subtitle: ' Data Science Workflow, Data Wrangling and ggplot'
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 8, fig.height = 6)
+ft_colors <- c("#FF2700", "#008FD5", "#77787B", "#2FC1D3", "#76B4BD", 
+               "#BABABA", "#FFB81C", "#E03A3E")
+```
+
+```{r, echo = FALSE}
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("(\textcolor{%s}{\textbf{%s}})", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+---
+
+# Welcome to Data Wrangling! 🚗📊
+
+We will learn about Data Wrangling and tidyverse's data science ecosystem through a real-world dataset about driving safety across US states from ["Dear Mona, Which State Has The Worst Drivers?"](https://web.archive.org/web/20260301023213/https://fivethirtyeight.com/features/which-state-has-the-worst-drivers/)
+
+## Objective
+
+- Practice data wrangling, plotting and interpreting data by 
+    - Completing the plots from lecture your turn
+    - Recreating at least two plots from the article
+
+---
+
+# Part 1: Setting Up Your R Environment 
+
+## Loading Required Packages
+
+```{r load-packages}
+library(tidyverse)  # Data science toolkit (includes ggplot2, dplyr, readr, etc.)
+library(kableExtra) # Pretty tables
+```
+
+## Import the data
+
+```{r import-data}
+# Import data directly from FiveThirtyEight's GitHub
+#drivers <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/bad-drivers/bad-drivers.csv")
+
+drivers <- read_csv("./data/bad-drivers.csv")
+```
+
+---
+
+# Part 2: Data Wrangling to Clean Up Column Names
+
+Using the original dataset column names can be incredibly tedious due to their length. Modify the code block below to rename all the long column names into concise snake_case handles.
+
+`r bfcolor("Solutions:", "blue")`
+
+```{r clean-names}
+# Write your data wrangling pipeline here
+# Hint: Use the rename() function to create drivers_clean
+```
+
+---
+
+# Part 3: Exercises
+
+Recall: `ggplot2` uses a "grammar of graphics" - you build plots layer by layer.
+
+**Basic ggplot2 syntax:**
+```r
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+## Exercise 1: Plot 1 from Lecture YT
+
+Come up with a neat visualization that shows something interesting about insurance premiums.
+
+`r bfcolor("Solutions:", "blue")`
+
+```{r premium-viz}
+# Write your code here
+```
+
+**Interpretation:** \
+*Replace this line with your written assessment of the plot.*
+
+\
+
+### Your Turn (YT): Distribution of a variable/column (random variable)
+
+Create a histogram showing the distribution of insurance premiums. Fill in the blanks and remove `eval=FALSE` or modify the block options when you are ready to knit.
+
+`r bfcolor("Solutions:", "blue")`
+
+```{r your-turn-1, eval=FALSE}
+drivers_clean %>%
+  ggplot(aes(x = _______)) +
+  geom_______(_____) +
+  labs(
+    title = "Distribution of average annual car insurance Premiums",
+    subtitle = "Analysis of insurance cost distributions across states",
+    x = "_______",
+    y = "_______"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## Exercise 2: Plot 2 from Lecture YT
+
+How do insurance premiums vary across geographic regions or across some other structural pattern? Show an interesting plot and don't forget to conclude with your written brief take-away. *(Hint: You may want to construct a regional categorical variable based on geographic regions or specific ranges of fatal accident rates).*
+
+`r bfcolor("Solutions:", "blue")`
+
+```{r regional-viz}
+# Write your code here
+```
+
+**Interpretation:** \
+*Replace this line with your brief take-away text.*
+
+---
+
+## Exercise 3: Recreate a couple of plots from the article using ggplot
+
+Choose two distinct insights mentioned in the article and recreate their structural representations.
+
+### Exercise 3.1.a 
+Describe what you are interested in plotting and why this is interesting to you. 
+
+`r bfcolor("Solutions:", "blue")`
+
+*Replace this line with your text.*
+
+### Exercise 3.1.b
+
+```{r plot3-1}
+# Your code here
+```
+
+### Exercise 3.1.c 
+Interpret what you found from wrangling your data and plotting it.
+
+`r bfcolor("Solutions:", "blue")`
+
+*Replace this line with your text.*
+
+\
+
+### Exercise 3.2.a 
+Describe what you are interested in plotting and why this is interesting to you. 
+
+`r bfcolor("Solutions:", "blue")`
+
+*Replace this line with your text.*
+
+### Exercise 3.2.b
+
+```{r plot3-2}
+# Your code here
+```
+
+### Exercise 3.2.c 
+Interpret what you found from wrangling your data and plotting it.
+
+`r bfcolor("Solutions:", "blue")`
+
+*Replace this line with your text.*
+
+---
+
+## Exercise 4: Putting It All Together
+
+### Describe your key findings from your four plots above
+
+Based on our analysis above:
+
+1. *Replace with finding 1*
+2. *Replace with finding 2*
+3. *Replace with finding 3*
+4. *Replace with finding 4*
+
+---
+
+## Learning Gains Question
+
+Reflecting on this assignment, what is the single biggest data wrangling or visualization concept you feel you have mastered? Conversely, what is one area or technical mechanism involving the tidyverse syntax that still feels confusing or requires further practice? What will you do about this? 
+
+`r bfcolor("Solutions:", "blue")`
+
+*Replace this line with your thoughts.*
