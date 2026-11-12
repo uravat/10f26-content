@@ -134,9 +134,18 @@ How do insurance premiums vary across geographic regions or across some other st
 
 ---
 
-## Exercise 3: Recreate a couple of plots from the article using ggplot
+## Exercise 3: Recreate a couple of plots or insights from the article using ggplot
 
-Choose two distinct insights mentioned in the article and recreate their structural representations.
+Choose two distinct insights discussed in the article and recreate the corresponding plots. You do not need to reproduce the original visualizations exactly. You may create simpler plots that communicate the same insights.
+
+What I'm looking for:
+
+1. Appropriate mapping of variables to aesthetics.
+2. Appropriate use of geometric objects.
+3. Customization of plots using ggplot.
+4. Clear communication of the insight drawn from the visualization.
+
+The goal of this assignment is to practice using ggplot and apply the techniques we have covered in class. Focus on creating clear and effective visualizations rather than reproducing the complexity of the original figures.
 
 ### Exercise 3.1.a 
 Describe what you are interested in plotting and why this is interesting to you. 
