@@ -1,0 +1,37 @@
+building,building_type,year_built,sq_ft_thousands,energy_use
+Broida Hall,Lab,1967,47,209
+Chemistry Building,Lab,1963,216,220
+Physical Sciences North,Lab,2021,146,205
+Harold Frank Hall,Lab,1973,206,203
+Engineering Science Building,Lab,2016,64,166
+Materials Research Laboratory,Lab,2000,67,203
+Marine Science Research Building,Lab,2012,205,165
+Life Science Building,Lab,2015,166,239
+Kohn Hall,Lab,1976,174,185
+Ellison Hall,Academic,1980,81,97
+Girvetz Hall,Academic,2016,92,101
+Phelps Hall,Academic,1989,92,95
+Buchanan Hall,Academic,2012,179,110
+Humanities and Social Sciences Building,Academic,2019,96,85
+North Hall,Academic,1962,155,106
+South Hall,Academic,1998,98,84
+Music Building,Academic,2021,49,119
+Arts Building,Academic,2008,187,103
+Santa Rosa Hall,Residence,1976,107,67
+San Miguel Hall,Residence,2014,41,77
+San Nicolas Hall,Residence,2000,59,60
+Anacapa Hall,Residence,1975,60,83
+Santa Cruz Hall,Residence,2002,156,60
+University Center,Service,1988,143,114
+Student Resource Building,Service,1979,76,139
+Recreation Center,Service,1980,140,154
+Carrillo Dining Commons,Service,1974,105,140
+Davidson Library,Academic,2000,194,86
+Cheadle Hall,Academic,1966,46,112
+Campbell Hall,Service,1962,88,187
+Events Center,Service,2012,58,107
+De La Guerra Dining Commons,Service,2009,35,165
+Ortega Dining Commons,Service,2007,133,132
+Mosher Alumni House,Service,1996,53,156
+Old Gym,Service,1957,56,120
+Facilities Management,Service,1986,177,318

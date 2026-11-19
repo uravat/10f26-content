@@ -1,0 +1,87 @@
+---
+title: "YT 15/W15: Campus energy + data joining"
+output:
+  html_document:
+    toc: false
+---
+
+## Getting started
+
+### Packages
+
+We'll use the **tidyverse** package for this analysis.
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+```
+
+### Data
+
+The data are modeled on the building-level energy records a campus facilities office might keep. The building names are real UCSB buildings, but **every other value is simulated** for teaching purposes (the energy use, year built, size, building type, and zone groupings are not facts about these buildings). The data are in the `data` folder.
+
+-   `building-energy.csv`: one row per building, with its type, year built, size, and annual energy use (kilowatt-hours per square foot).
+-   `campus-zones.csv`: one row per building, with the campus zone (Science, Arts & Humanities, Student Life, or Admin & Services) it belongs to.
+
+```{r load-data, message=FALSE}
+building_energy <- read_csv("data/building-energy.csv")
+campus_zones <- read_csv("data/campus-zones.csv")
+```
+
+And let's take a look at the data.
+
+```{r glimpse}
+glimpse(building_energy)
+glimpse(campus_zones)
+```
+
+## Joining
+
+Join the building energy data with the zone data and save the joined data frame as a new data frame, not overwriting either data frame that goes into the join.
+
+```{r join}
+
+# add your code here
+```
+
+Calculate the average energy use of buildings in each zone.
+What is surprising in the output?
+
+```{r zone-means-take-1}
+
+# add your code here
+```
+
+*Add your response here.*
+
+```{r identify-na}
+
+# add your code here
+```
+
+Apply a fix for the `NA` in zone, and calculate the mean energy use for zones again.
+Display the results in ascending order of mean energy use.
+
+```{r zone-means-take-2}
+
+# add your code here
+```
+
+*Add your response here.*
+
+## Extra: what else could go wrong in a join?
+
+`campus_zones` has one more row than a perfect match would give. Use a different join to find the row in `campus_zones` that has no building in the energy data.
+
+```{r anti-join}
+
+# add your code here
+```
+
+*Add your response here.*
+
+```{r inner-join}
+
+# add your code here
+```
+
+*Add your response here.*
